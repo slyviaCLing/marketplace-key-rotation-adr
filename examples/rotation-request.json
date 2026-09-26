@@ -1,0 +1,17 @@
+{
+  "rotationId": "rot_2026_03_17",
+  "graceHours": 24,
+  "sellerAssets": [
+    { "sellerId": "seller-44", "assetId": "lab-report-template", "apiKeyRef": "api-legacy" }
+  ],
+  "buyerUpdates": [
+    { "buyerId": "buyer-88", "channel": "shipment-webhook", "apiKeyRef": "api-legacy" }
+  ],
+  "orderHandoffs": [
+    { "orderId": "ord-1001", "destination": "fulfillment-core", "apiKeyRef": "api-legacy" }
+  ],
+  "logEvidence": {
+    "oldKeyFingerprint": "api-legacy",
+    "deployments": ["orders-api", "buyer-sync"]
+  }
+}
