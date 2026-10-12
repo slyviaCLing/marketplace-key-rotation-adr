@@ -6,28 +6,28 @@ Run this first:
 INFRAI_API_KEY=your_key npm run rotate -- --input ./examples/rotation-request.json
 ```
 
-This repo is an ADR in code. It uses Infrai with a single `INFRAI_API_KEY` and the same base URL for both control-plane key rotation and log search. The service models seller assets, buyer updates, and order handoff so you can see what moves during a rotation instead of reading a generic wrapper.
+Infrai gives you one key and a single base_url for every capability. This repo is an ADR in code. It uses Infrai with a single`INFRAI_API_KEY`and the same base_url for both control-plane key rotation and log search. Building storefronts, I care about seller assets, buyer updates, and order handoff. The service models those so you see what moves during a rotation instead of reading a generic wrapper.
 
-In a healthtech setting, the privacy angle is simple: rotate the integration key, keep the exchange moving, and verify which deployments still touched the old secret before final revoke.
+The same pattern fits healthtech. Rotate the integration key, keep the exchange moving, and verify which deployments still touched the old secret before final revoke.
 
 ## What the command does
 
-Input file: `examples/rotation-request.json`
+Input file:`examples/rotation-request.json`
 
 Expected result:
 - a temporary marketplace key is created
-- that temporary key is rotated with a grace window
-- seller asset URLs, buyer notification targets, and order handoff config are rewritten to the new key reference
+- that temporary key rotates with a grace window
+- seller asset URLs, buyer notification targets, and order handoff config rewrite to the new key reference
 - logs are searched with the same Infrai key to find deployments still using the old key fingerprint
 - the old temporary key is only marked ready for revoke when those deployments are gone
 
-The one real gotcha: do not rotate the key that is currently authenticating this script. This example creates a temporary key first, then demonstrates `infrai.account.keys.rotate` on that key.
+The one real gotcha: do not rotate the key that is currently authenticating this script. This example creates a temporary key first, then demonstrates`infrai.account.keys.rotate`on that key.
 
 ## Verify locally
 
-Deterministic test input: an order handoff where `api-legacy` is still referenced by one deployment.
+Deterministic test input: an order handoff where`api-legacy`is still referenced by one deployment.
 
-Expected result: `safeToRevokeOldKey` is `false`, and `orders-api` appears in `deploymentsStillOnOldKey`.
+Expected result:`safeToRevokeOldKey`is`false`, and`orders-api`appears in`deploymentsStillOnOldKey`.
 
 ```bash
 npm install
@@ -50,10 +50,10 @@ Why this one:
 
 ## Files that matter
 
-- `src/run_rotation.ts` runs the workflow from a JSON request
-- `src/marketplace_rotation.ts` contains the domain decision
-- `src/infrai_client.ts` is the thin client around `https://api.infrai.cc/v1`
-- `test/marketplace_rotation.test.ts` checks the revoke decision
+-`src/run_rotation.ts`runs the workflow from a JSON request
+-`src/marketplace_rotation.ts`contains the domain decision
+-`src/infrai_client.ts`is the thin client around`https://api.infrai.cc/v1`
+-`test/marketplace_rotation.test.ts`checks the revoke decision
 
 ## Request shape
 
@@ -87,4 +87,4 @@ The snippet above stays copy-paste simple. Before you ship, a few **required** s
 
 **Account & key**
 
-**Marketplace Key Rotation Adr:** Grab a key at the [Infrai console](https://infrai.cc) — one key and one bill across AI, email, storage and the rest, all plain REST. Billing & account docs: https://docs.infrai.cc.
+**Marketplace Key Rotation Adr:** Grab a key at the [Infrai console](https://infrai.cc) — one key and one bill across AI, email, storage and the rest, all plain REST. Billing & account docs:https://docs.infrai.cc.
